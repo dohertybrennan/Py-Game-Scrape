@@ -56,10 +56,10 @@ def gameInfo(x):
 		release_date = detail_list[3].strip()
 		esrb = detail_list[5].strip()
 
-		cursor.execute('insert into vg_test values ("' + x + '", "' + title + '", "' + genre + '", "' + release_date + '");')
+		cursor.execute('insert into vgdb values ("' + x + '", "' + title + '", "' + genre + '", "' + release_date + '");')
 		mydb.commit()
 
-		cursor.execute('select * from vg_test where upc =' + x + ';')
+		cursor.execute('select * from vgdb where upc =' + x + ';')
 		result = cursor.fetchone()
 
 		title = result[1]
@@ -88,7 +88,7 @@ def gameInfo(x):
 
 	elif result[0] == 1:
 		print("Retrieving Game Info from the Database...\n")
-		cursor.execute('select * from vg_test where upc =' + x + ';')
+		cursor.execute('select * from vgdb where upc =' + x + ';')
 		result = cursor.fetchone()
 
 		title = result[1]
