@@ -56,7 +56,7 @@ def gameInfo(x):
 		release_date = detail_list[3].strip()
 		esrb = detail_list[5].strip()
 
-		cursor.execute('insert into vgdb values ("' + x + '", "' + title + '", "' + genre + '", "' + release_date + '");')
+		cursor.execute('insert into vgdb (upc, title, genre, release_date) values ("' + x + '", "' + title + '", "' + genre + '", "' + release_date + '");')
 		mydb.commit()
 
 		cursor.execute('select * from vgdb where upc =' + x + ';')
