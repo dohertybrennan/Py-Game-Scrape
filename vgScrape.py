@@ -12,7 +12,7 @@ mydb = mycon.connect(
 	host="localhost",
 	user="wpuser",
 	passwd="supersecretpassword",
-	database="vgdb"
+	database="wpdata"
 )
 
 
