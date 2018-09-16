@@ -8,8 +8,8 @@ import urllib.request
 #Connection to database
 mydb = mycon.connect(
 	host="localhost",
-	user="brennan",
-	passwd="admin",
+	user="wpuser",
+	passwd="supersecretpassword",
 	database="test"
 )
 

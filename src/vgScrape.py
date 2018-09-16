@@ -17,12 +17,12 @@ mydb = mycon.connect(
 
 
 def gameInfo(x):
-	
+
 	#Checks to see if gameinfo already exists in database
 	cursor = mydb.cursor()
-	cursor.execute("select exists (select * from vg_test where upc = '" + x + "');")
+	cursor.execute("select exists (select * from vgdb where upc = '" + x + "');")
 	result = cursor.fetchone()
-	
+
 	if result[0] == 0:
 		print("Game not in Database. Retrieving info online...\n")
 		#This game is not in the database and info will now be retrieved
@@ -32,6 +32,7 @@ def gameInfo(x):
 		response.close()
 		soup = BeautifulSoup(html, "html.parser")
 
+		#Defines where to look for the information on the webpage
 		full_details = soup.find("div", {"id": "full_details"})
 		title = soup.find("div", {"class": "recommendations horizontal js-recommendations"})
 		console_raw = soup.find("h1", {"class": "chart_title"})
@@ -44,7 +45,7 @@ def gameInfo(x):
 		else:
 			print("An error has occurred")
 			exit()
-		
+
 		#Pulls all fo the details about the game at the bottom of the page into an array
 		details = full_details.findAll('span')
 		detail_list = []
@@ -55,12 +56,12 @@ def gameInfo(x):
 		release_date = detail_list[3].strip()
 		esrb = detail_list[5].strip()
 
-		cursor.execute('insert into vg_test values ("' + x + '", "' + title + '", "' + genre + '", "' + release_date + '");')
+		cursor.execute('insert into vgdb (upc, title, genre, release_date) values ("' + x + '", "' + title + '", "' + genre + '", "' + release_date + '");')
 		mydb.commit()
 
-		cursor.execute('select * from vg_test where upc =' + x + ';')
+		cursor.execute('select * from vgdb where upc =' + x + ';')
 		result = cursor.fetchone()
-		
+
 		title = result[1]
 		genre = result[2]
 		release_date = result[3]
@@ -87,9 +88,9 @@ def gameInfo(x):
 
 	elif result[0] == 1:
 		print("Retrieving Game Info from the Database...\n")
-		cursor.execute('select * from vg_test where upc =' + x + ';')
+		cursor.execute('select * from vgdb where upc =' + x + ';')
 		result = cursor.fetchone()
-		
+
 		title = result[1]
 		genre = result[2]
 		release_date = result[3]
@@ -116,22 +117,22 @@ def upcLookup(x):
 		for x in game_link:
 			pass
 		next_page = game_link.get("href")
-	
+
 		response = requests.get(next_page)
 		html = response.text
 
-	
+
 	soup = BeautifulSoup(html, "html.parser")
 	full_details = soup.find("div", {"id": "full_details"})
 	details = full_details.findAll('span')
 	detail_list = []
 	for detail in details:
 		detail_list.append(detail.text)
-	
+
 	upc = detail_list[7].strip()
 	return upc
 
-	
+
 
 #The UPC will be injected in the URL to lookup information about the product
 upc = sys.argv[1]
@@ -149,10 +150,8 @@ if upc == "0":
 
 		for x in upc:
 			gameInfo(x)
-		
+
 	else:
 		gameInfo(upc)
-	
-		
 else:
 	gameInfo(upc)
